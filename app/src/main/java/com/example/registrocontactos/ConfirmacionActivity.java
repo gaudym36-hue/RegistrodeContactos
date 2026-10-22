@@ -1,41 +1,55 @@
 package com.example.registrocontactos;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ConfirmacionActivity extends AppCompatActivity {
-    // Declaramos las variables para mostrar los datos recibidos
-    TextView tvNombre, tvCorreo, tvTelefono, tvTipo;
+    private static final String TAG = "Lifecycle_Confirmacion";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirmacion);
+        Log.d(TAG, "onCreate");
 
-        // NOTA: Asegúrate de que en tu activity_confirmacion.xml tengas estos IDs.
-        // Si tus TextViews se llaman diferente, pon sus nombres reales aquí adentro.
-        tvNombre = findViewById(R.id.main);
-        tvCorreo = findViewById(R.id.main);
-        tvTelefono = findViewById(R.id.main);
-        tvTipo = findViewById(R.id.main);
+        // Conectamos los componentes correctos de la pantalla de confirmación
+        TextView tvResumen = findViewById(R.id.tvResumen);
+        Button btnVolver = findViewById(R.id.btnVolver);
+        Button btnConfirmar = findViewById(R.id.btnConfirmar);
 
+        // Recibimos los datos empaquetados desde la primera pantalla
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String nombre = extras.getString("NOMBRE");
+            String correo = extras.getString("CORREO");
+            String telefono = extras.getString("TELEFONO");
+            String tipo = extras.getString("TIPO");
 
-        // 1. Recibimos el "paquete" con los datos de la pantalla anterior
-        Bundle datosRecibidos = getIntent().getExtras();
+            // Juntamos todo en un solo texto bien formateado
+            String resumen = "Nombre: " + nombre + "\n\n" +
+                    "Correo: " + correo + "\n\n" +
+                    "Teléfono: " + telefono + "\n\n" +
+                    "Tipo: " + tipo;
+            tvResumen.setText(resumen);
 
-        if (datosRecibidos != null) {
-            // 2. Extraemos los textos usando las mismas llaves (KEYS) que creamos antes
-            String nombre = datosRecibidos.getString("KEY_NOMBRE");
-            String correo = datosRecibidos.getString("KEY_CORREO");
-            String telefono = datosRecibidos.getString("KEY_TELEFONO");
-            String tipo = datosRecibidos.getString("KEY_TIPO");
-
-            // 3. Pintamos la información en las etiquetas de la pantalla
-            if (tvNombre != null) tvNombre.setText("Nombre: " + nombre);
-            if (tvCorreo != null) tvCorreo.setText("Correo: " + correo);
-            if (tvTelefono != null) tvTelefono.setText("Teléfono: " + telefono);
-            if (tvTipo != null) tvTipo.setText("Tipo: " + tipo);
+            // Al confirmar, guardamos en la lista en memoria y cerramos
+            btnConfirmar.setOnClickListener(v -> {
+                Contacto nuevoContacto = new Contacto(nombre, correo, telefono, tipo);
+                ContactRepository.getInstance().agregarContacto(nuevoContacto);
+                finish(); // Regresa a MainActivity
+            });
         }
+
+        // Al presionar Volver, simplemente cerramos esta pantalla sin guardar
+        btnVolver.setOnClickListener(v -> finish());
     }
+
+    @Override protected void onStart() { super.onStart(); Log.d(TAG, "onStart"); }
+    @Override protected void onResume() { super.onResume(); Log.d(TAG, "onResume"); }
+    @Override protected void onPause() { super.onPause(); Log.d(TAG, "onPause"); }
+    @Override protected void onStop() { super.onStop(); Log.d(TAG, "onStop"); }
+    @Override protected void onDestroy() { super.onDestroy(); Log.d(TAG, "onDestroy"); }
 }
