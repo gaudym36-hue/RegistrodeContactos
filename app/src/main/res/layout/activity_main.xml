@@ -63,7 +63,7 @@
             android:text="Enviar Datos"
             android:layout_marginBottom="24dp" />
 
-        <!-- LA LISTA: Ahora tiene espacio para dibujarse abajo -->
+        <!-- LA LISTA: Limpia y sin atributos complejos en el XML -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvContactos"
             android:layout_width="match_parent"

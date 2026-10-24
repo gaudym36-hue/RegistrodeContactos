@@ -8,39 +8,42 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
-public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
-    private final List<Contacto> contactos;
+public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactoViewHolder> {
 
-    public ContactAdapter(List<Contacto> contactos) {
-        this.contactos = contactos;
+    private final List<Contacto> listaContactos;
+
+    public ContactAdapter(List<Contacto> listaContactos) {
+        this.listaContactos = listaContactos;
     }
 
     @NonNull
     @Override
-    public ContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ContactoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_contacto, parent, false);
-        return new ContactViewHolder(view);
+        return new ContactoViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
-        Contacto c = contactos.get(position);
-        holder.tvItemNombre.setText(c.getNombre());
-        holder.tvItemDetalles.setText(c.getTipo() + " | Tel: " + c.getTelefono() + " | " + c.getCorreo());
+    public void onBindViewHolder(@NonNull ContactoViewHolder holder, int position) {
+        Contacto contacto = listaContactos.get(position);
+        holder.tvNombre.setText(contacto.getNombre());
+
+        String detalles = contacto.getTipo() + " | " + contacto.getTelefono() + " | " + contacto.getCorreo();
+        holder.tvDetalles.setText(detalles);
     }
 
     @Override
     public int getItemCount() {
-        return contactos.size();
+        return listaContactos != null ? listaContactos.size() : 0;
     }
 
-    static class ContactViewHolder extends RecyclerView.ViewHolder {
-        TextView tvItemNombre, tvItemDetalles;
+    static class ContactoViewHolder extends RecyclerView.ViewHolder {
+        TextView tvNombre, tvDetalles;
 
-        public ContactViewHolder(@NonNull View itemView) {
+        public ContactoViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvItemNombre = itemView.findViewById(R.id.tvItemNombre);
-            tvItemDetalles = itemView.findViewById(R.id.tvItemDetalles);
+            tvNombre = itemView.findViewById(R.id.tvItemNombre);
+            tvDetalles = itemView.findViewById(R.id.tvItemDetalles);
         }
     }
 }
